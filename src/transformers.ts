@@ -217,6 +217,45 @@ transformers.json = {
   },
 };
 
+transformers.last_value = {
+  description: 'Current Values to columns',
+  getColumns: () => {
+    console.log('[PB] Getcolumns called');
+    return [];
+  },
+  transform: (data: any, panel: any, model: any) => {
+    if (data.length === 1 && data[0].columns !== undefined) {
+      console.log('[PB] Detected table format, yay!');
+      const columns = data[0].columns;
+      const rows: any[] = data[0].rows;
+      let deviceCol = 0;
+      for (let i = 0; i < columns.length; i++) {
+        model.columns.push({ text: columns[i].text });
+        console.log('[PB] Detected column ' + columns[i].text);
+        if (columns[i].text === 'device') {
+          deviceCol = i;
+        }
+      }
+      console.log('[PB] Processing ' + rows.length + ' records');
+      const rowsPost = rows.reduce((acc, v) => {
+        if (acc[v[deviceCol]] === undefined) {
+          acc[v[deviceCol]] = v;
+        }
+        return acc;
+      }, {});
+      console.log('[PB] Processing results:', rowsPost);
+
+      for (const row in rowsPost) {
+        model.rows.push(rowsPost[row]);
+      }
+
+      console.log('[PB] Finished');
+    } else {
+      console.error('[PB] Table format not detected');
+    }
+  },
+};
+
 function transformDataToTable(data: any, panel: any) {
   const model = new TableModel();
 
