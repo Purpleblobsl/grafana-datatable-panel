@@ -2,7 +2,7 @@
   "name": "briangann-datatable-panel",
   "private": false,
   "license": "MIT",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Grafana Datatable Panel",
   "homepage": "https://github.com/briangann/grafana-datatable-panel",
   "author": {
